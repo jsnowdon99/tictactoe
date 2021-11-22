@@ -88,7 +88,7 @@ def draw_instructions(instr = False):
         text2 = font_words.render("Otherwise, please press 'O'", True, BLACK)
         textRect1, textRect2 = text.get_rect(), text2.get_rect()
         textRect1.center = (500, 25)
-        textRect2.center = (496, 500)
+        textRect2.center = (496, 50)
         screen.blit(text, textRect1), screen.blit(text2, textRect2)
 
 
@@ -209,11 +209,10 @@ def new_game(player, opponent):
                 first_turn = False
                 column = pos[0]//130
                 row = pos[1]//130
-                print(row, column)
-                board.update_board(row, column, player)
-                draw_grid(board.get_current_board(), gameplay=True)
-                pygame.display.update()
-                bot_turn = True #switch turns
+                if board.update_board(row, column, player):
+                    draw_grid(board.get_current_board(), gameplay=True)
+                    pygame.display.update()
+                    bot_turn = True #switch turns
 
             #prompt user to play turn
             board.get_current_board()
@@ -225,16 +224,16 @@ def new_game(player, opponent):
             pygame.display.update()
 
             #check game conditions
-            if check_draw(board.board):
-                inProgress = False
-                result = "drew"
             
-            elif player_win(board.board, player_team):
+            if player_win(board.board, player_team):
                 inProgress = False
                 result = "won"
             elif player_win(board.board, opponent):
                 inProgress = False
                 result = "lost"
+            elif check_draw(board.board):
+                inProgress = False
+                result = "drew"
        
     
     draw_grid(board.get_current_board(), gameplay=True)
