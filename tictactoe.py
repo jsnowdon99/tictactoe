@@ -10,18 +10,6 @@ from Ai import Ai
 pygame.init()
 clock = pygame.time.Clock()
 
-#game font
-pygame.font.init()
-font_words = pygame.font.SysFont("georgia", 25)
-font_plays = pygame.font.SysFont("georgia", 260)
-
-
-#grid size
-g_width = 780//3
-g_height = 780//3
-g_margin = 5
-g_center = (800//3 + 20)
-
 #colors
 BLUE  = (0, 0, 255)
 RED   = (255, 0, 0)
@@ -33,15 +21,27 @@ SQUARES = (30, 170, 150)
 GRID = (30, 30, 50)
 
 #settings for display
-s_width = 1200
-s_height = 800
-screen = pygame.display.set_mode([s_width, s_height])
+s_width = 600
+s_height = 400
+screen = pygame.display.set_mode([s_width, s_height], pygame.RESIZABLE)
 pygame.display.set_caption("TicTacToe")
 screen.fill( BG )
 user_input = []
 x = 100
 y = 200
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x,y)
+
+#game font
+pygame.font.init()
+font_words = pygame.font.SysFont("georgia", 15)
+font_plays = pygame.font.SysFont("georgia", s_height//3)
+
+
+#grid size
+g_width = 390//3
+g_height = 390//3
+g_margin = 2
+g_center = (400//3 + 10)
 
 
 #------------------------------------------------General game UI methods-----------------------------------------------------------------#
@@ -55,24 +55,24 @@ def draw_grid( board=False, gameplay = False):
             pygame.draw.rect(screen, SQUARES, [(g_margin + g_width) * column + g_margin, (g_margin+g_height)
             * row + g_margin, g_width, g_height])
             #vertical interior grid
-            pygame.draw.line( screen, GRID, (260 * column + (5 * column), 0), ((260 * column) + (5 * column), 795), width=10)
+            pygame.draw.line( screen, GRID, (130 * column + (2 * column), 0), ((130 * column) + (2 * column), 397), width=5)
             if board:
                 if board[row][column] == "X":
                     board_play = font_plays.render(("X"), 1, BLACK)
-                    screen.blit(board_play, ( 50 + (260 * column), (260 * row)))
+                    screen.blit(board_play, ( 25 + (130 * column), (130 * row)))
                 if board[row][column] == "O":
                     board_play = font_plays.render(("O"), 1, BLACK)
-                    screen.blit(board_play, (50 + (260 * column),(260 * row)))
+                    screen.blit(board_play, (25 + (130 * column),(130 * row)))
         #horizontal interior grid
-        pygame.draw.line( screen, GRID, (0, (row * 260) + (5 * row)), (795, (row * 260) + (5 * row)), width=10)
+        pygame.draw.line( screen, GRID, (0, (row * 130) + (2 * row)), (397, (row * 130) + (2 * row)), width=5)
 
     #bottom and top grid
-    pygame.draw.line( screen, GRID, (0, 5), (795, 5), width=10)
-    pygame.draw.line( screen, GRID, (0, 795), (795, 795), width=10)
+    pygame.draw.line( screen, GRID, (0, 2), (397, 2), width=5)
+    pygame.draw.line( screen, GRID, (0, 397), (397, 397), width=5)
 
     #leftmost and rightmost vertical grid
-    pygame.draw.line( screen, GRID, (5, 0), (5, 800), width=10)
-    pygame.draw.line( screen, GRID, (795, 0), (795, 800), width=10)
+    pygame.draw.line( screen, GRID, (2, 0), (2, 400), width=5)
+    pygame.draw.line( screen, GRID, (397, 0), (397, 400), width=5)
 
  
 def draw_instructions(instr = False):
@@ -81,14 +81,14 @@ def draw_instructions(instr = False):
     if instr:
         text = font_words.render("Please choose 'X' or 'O'", True, BLACK)
         textRect = text.get_rect()
-        textRect.center = (1000, 50)
+        textRect.center = (500, 25)
         screen.blit(text, textRect)
     else:
         text = font_words.render("To play as 'X', please press 'X'", True, BLACK)
         text2 = font_words.render("Otherwise, please press 'O'", True, BLACK)
         textRect1, textRect2 = text.get_rect(), text2.get_rect()
-        textRect1.center = (1000, 50)
-        textRect2.center = (995, 100)
+        textRect1.center = (500, 25)
+        textRect2.center = (496, 500)
         screen.blit(text, textRect1), screen.blit(text2, textRect2)
 
 
@@ -128,12 +128,12 @@ def replay_screen(result):
     pos = pygame.mouse.get_pos()
 
     #Prompt text
-    text = font_words.render(f"You {result}! Want to play again?", True, BLACK)
-    screen.blit(text , (810 ,s_height//2 - 28))
+    text = font_words.render(f"You {result}! Play again?", True, BLACK)
+    screen.blit(text , (405 ,s_height//2 - 14))
     text = font_words.render("Yes ('Y')", True, BLACK)
-    screen.blit(text , (820,s_height//2 + 28))
+    screen.blit(text , (410,s_height//2 + 14))
     text = font_words.render("No, I can't win! ('N')", True, BLACK)
-    screen.blit(text , (820,s_height//2 + 78))
+    screen.blit(text , (410,s_height//2 + 39))
     pygame.display.update()
     
     #wait for user input
@@ -204,11 +204,12 @@ def new_game(player, opponent):
                 draw_grid(board.get_current_board(), gameplay=True)
         # User turn
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN and pos[0] < 780:
+            if event.type == pygame.MOUSEBUTTONDOWN and pos[0] < 389 and pos[1] < 389:
                 #Register player click  location, translate to board index
                 first_turn = False
-                column = pos[0]//260
-                row = pos[1]//260
+                column = pos[0]//130
+                row = pos[1]//130
+                print(row, column)
                 board.update_board(row, column, player)
                 draw_grid(board.get_current_board(), gameplay=True)
                 pygame.display.update()
@@ -219,7 +220,7 @@ def new_game(player, opponent):
             draw_grid(board.get_current_board(), gameplay=True)
             text = font_words.render("Make your move...", True, BLACK)
             textRect = text.get_rect()
-            textRect.center = (995, 100)
+            textRect.center = (497, 50)
             screen.blit(text, textRect)
             pygame.display.update()
 
