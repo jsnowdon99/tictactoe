@@ -1,6 +1,6 @@
 # tictactoe
 
-# To run this program, you must install pygame 
+# To run this python program, you must install pygame 
 
 pip install pygame
 
