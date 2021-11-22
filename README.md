@@ -13,3 +13,6 @@ Utilize keyboard commands to choose a team and to restart or quit the game at th
 
 # Computer logic
 The computer player is theoretically impossible to beat given the game conditions. It utilizes a minimax algorithm to select the best choice given a recursive tree of all possible computer and optimal player moves.
+
+More info here:
+https://en.wikipedia.org/wiki/Minimax
